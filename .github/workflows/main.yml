@@ -1,0 +1,50 @@
+name: Laravel Tests
+
+on: [push, pull_request]
+
+jobs:
+  laravel:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: blogsite_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: mbstring, pdo, mysql, dom
+
+      - name: Copy .env and set test DB
+        run: |
+          cp .env.example .env
+          php artisan config:clear
+          php artisan key:generate
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Wait for MySQL to be ready
+        run: sleep 20
+
+      - name: Run Migrations
+        env:
+          DB_CONNECTION: mysql
+          DB_DATABASE: blogsite_test
+          DB_USERNAME: root
+          DB_PASSWORD: root
+          DB_HOST: 127.0.0.1
+        run: php artisan migrate --force
+
+      - name: Run Tests
+        run: php artisan test
