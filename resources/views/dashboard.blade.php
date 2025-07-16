@@ -16,6 +16,9 @@
                     @foreach ($posts as $post)
                         <div class="p-6 border-b border-gray-200">
                             <h3 class="text-lg font-semibold">{{ $post->title }}</h3>
+                                    @if ($post->image)
+            <img src="{{ asset('storage/' . $post->image) }}" alt="Post Image" class="w-48 h-auto rounded shadow mt-2 mb-4">
+        @endif
                             <p class="text-sm text-gray-600 mt-2">{{ Str::limit($post->content, 100) }}</p>
                             <div class="mt-4 flex gap-4">
                             <a href="{{ route('posts.edit', $post) }}" class="text-blue-600 hover:underline">✏️ Edit</a>

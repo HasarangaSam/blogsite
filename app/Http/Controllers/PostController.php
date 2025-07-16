@@ -30,17 +30,24 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-        'title' => 'required|string|max:255',
-        'content' => 'required|string',
-        ]);
+              $request->validate([
+                'title' => 'required|string|max:255',
+                'content' => 'required|string',
+                'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+            ]);
 
-        $request->user()->posts()->create([
-        'title' => $request->title,
-        'content' => $request->content,
-        ]);
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $imagePath = $request->file('image')->store('images', 'public');
+            }
 
-    return redirect()->route('dashboard')->with('success', 'Post created!');
+            $request->user()->posts()->create([
+                'title' => $request->title,
+                'content' => $request->content,
+                'image' => $imagePath, // This must be saved
+            ]);
+
+            return redirect()->route('dashboard')->with('success', 'Post created!');
     }
 
     /**

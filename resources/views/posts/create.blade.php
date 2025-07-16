@@ -7,7 +7,7 @@
 
     <div class="py-6">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <form method="POST" action="{{ route('posts.store') }}">
+            <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="mb-4">
@@ -18,6 +18,11 @@
                 <div class="mb-4">
                     <label class="block font-medium text-sm text-gray-700">Content</label>
                     <textarea name="content" class="w-full border-gray-300 rounded-md shadow-sm" rows="5"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block font-medium text-sm text-gray-700">Featured Image</label>
+                    <input type="file" name="image" accept="image/*" class="w-full border-gray-300 rounded-md shadow-sm">
                 </div>
 
                 <div>
