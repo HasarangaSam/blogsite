@@ -28,10 +28,14 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
-      - name: Copy .env and set test DB
+      - name: Copy .env and set app key
         run: |
           cp .env.example .env
+          php artisan config:clear
+          php artisan view:clear
           php artisan key:generate
+        env:
+          APP_URL: http://localhost
 
       - name: Wait for MySQL to be ready
         run: sleep 20
