@@ -25,14 +25,13 @@ jobs:
           php-version: 8.2
           extensions: mbstring, pdo, mysql, dom
 
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
       - name: Copy .env and set test DB
         run: |
           cp .env.example .env
-          php artisan config:clear
           php artisan key:generate
-
-      - name: Install Composer dependencies
-        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Wait for MySQL to be ready
         run: sleep 20
