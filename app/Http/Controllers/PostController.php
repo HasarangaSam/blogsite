@@ -85,6 +85,10 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $this->authorize('delete', $post); // Ensure only owner can delete
+
+        $post->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Post deleted!');
     }
 }
